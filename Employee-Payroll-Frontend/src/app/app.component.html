@@ -1,0 +1,232 @@
+<div class="container">
+  <div class="box">
+    <header>
+      <img src="../assets/logo.png" alt="Company Logo" class="logo" />
+      <div class="AppName">
+        <span class="line1">Employee</span>
+        <span class="line2">Payroll</span>
+      </div>
+    </header>
+
+    
+
+    <div class="content">
+
+      <div class="controls">
+      <span class="employee-details">Employee Details</span>
+      <div class="right-controls">
+        <input
+          [(ngModel)]="searchText"
+          placeholder="Search Employee"
+          class="searchInput"
+          [class.show]="showSearch"
+        />
+        <button class="searchButton" (click)="toggleSearch()">
+          <img src="../assets/search.png" alt="Search" class="searchImg" />
+        </button>
+        <button (click)="addEmployee()" class="addEmployee">
+          <img
+            src="../assets/add.png"
+            alt="Add Employee"
+            class="addEmployeeImg"
+          />
+          Add Employee
+        </button>
+      </div>
+    </div>
+
+      <div class="form-container" *ngIf="showForm">
+        <div class="heading-form">Employee Payroll Form</div>
+        <form (ngSubmit)="saveEmployee()">
+          <div class="input-container">
+            <input
+              [(ngModel)]="newEmployee.name"
+              name="name"
+              placeholder="Full Name"
+              required
+            />
+
+            <div class="gender-options">
+              <label>
+                <input
+                  type="radio"
+                  name="gender"
+                  [(ngModel)]="newEmployee.gender"
+                  value="Male"
+                  required
+                />
+                Male
+              </label>
+              <label>
+                <input
+                  type="radio"
+                  name="gender"
+                  [(ngModel)]="newEmployee.gender"
+                  value="Female"
+                  required
+                />
+                Female
+              </label>
+            </div>
+
+            <div class="profile-options">
+              <label>
+                <input
+                  type="radio"
+                  name="profilePic"
+                  [(ngModel)]="newEmployee.profilePic"
+                  value="../assets/user1.png"
+                  required
+                />
+                <img
+                  src="../assets/user1.png"
+                  alt="User 1"
+                  class="profilePic"
+                />
+              </label>
+              <label>
+                <input
+                  type="radio"
+                  name="profilePic"
+                  [(ngModel)]="newEmployee.profilePic"
+                  value="../assets/user2.png"
+                  required
+                />
+                <img
+                  src="../assets/user2.png"
+                  alt="User 2"
+                  class="profilePic"
+                />
+              </label>
+              <label>
+                <input
+                  type="radio"
+                  name="profilePic"
+                  [(ngModel)]="newEmployee.profilePic"
+                  value="../assets/user3.png"
+                  required
+                />
+                <img
+                  src="../assets/user3.png"
+                  alt="User 3"
+                  class="profilePic"
+                />
+              </label>
+              <label>
+                <input
+                  type="radio"
+                  name="profilePic"
+                  [(ngModel)]="newEmployee.profilePic"
+                  value="../assets/user4.png"
+                  required
+                />
+                <img
+                  src="../assets/user4.png"
+                  alt="User 4"
+                  class="profilePic"
+                />
+              </label>
+            </div>
+
+            <div class="department-options">
+              <label
+                *ngFor="let dept of ['HR', 'Sales', 'Finance', 'Engineer', 'Others']"
+              >
+                <input
+                  type="checkbox"
+                  name="department"
+                  (change)="updateDepartments(dept, $event)"
+                  [checked]="newEmployee.department?.includes(dept)"
+                />
+                {{ dept }}
+              </label>
+            </div>
+
+            <input
+              [(ngModel)]="newEmployee.salary"
+              name="salary"
+              placeholder="Salary"
+              required
+            />
+
+            <div class="date-options">
+              <select [(ngModel)]="newEmployee.day" name="day" required>
+                <option value="" disabled selected>Day</option>
+                <option *ngFor="let day of days" [value]="day">{{ day }}</option>
+              </select>
+              <select [(ngModel)]="newEmployee.month" name="month" required>
+                <option value="" disabled selected>Month</option>
+                <option *ngFor="let month of months" [value]="month">
+                  {{ month }}
+                </option>
+              </select>
+              <select [(ngModel)]="newEmployee.year" name="year" required>
+                <option value="" disabled selected>Year</option>
+                <option *ngFor="let year of years" [value]="year">{{ year }}</option>
+              </select>
+            </div>
+          </div>
+          <div id="btn">
+            <button type="submit" id="btn1">
+              {{ editMode ? "Save" : "Add" }}
+            </button>
+            <button type="button" id="btn2" (click)="resetForm()">
+              Cancel
+            </button>
+            <button type="reset" id="btn3">Reset</button>
+          </div>
+        </form>
+      </div>
+
+      <div class="records" *ngIf="!showForm">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Full Name</th>
+              <th>Gender</th>
+              <th>Salary</th>
+              <th>Department</th>
+              <th>Start Date</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let employee of searchEmployees(); let i = index">
+              <td>{{ employee.id }}</td>
+              <td>
+                <img
+                  [src]="employee.profilePic"
+                  alt="Profile Image"
+                  class="profilePic"
+                />
+                {{ employee.name }}
+              </td>
+              <td>{{ employee.gender }}</td>
+              <td>₹{{ employee.salary }}</td>
+              <td>
+                <span
+                  *ngFor="let dept of employee.department"
+                  class="department-tag"
+                >
+                  {{ dept }}
+                </span>
+              </td>
+              <td>{{ employee.startDate }}</td>
+              <td class="icons">
+                <div class="btns">
+                  <button (click)="editEmployee(employee)">
+                  <img src="../assets/pencil.png" alt="Edit" />
+                </button>
+                <button (click)="deleteEmployee(employee.id)">
+                  <img src="../assets/trash.png" alt="Delete" />
+                </button>
+              </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
